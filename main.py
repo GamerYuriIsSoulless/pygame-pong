@@ -1,4 +1,5 @@
 import pygame, sys, random
+pygame.font.init()
 
 # Variables
 
@@ -14,17 +15,22 @@ opponentVel = 3.5
 
 # Functions
 def ballAnimation():
-    global ballSpeedX, ballSpeedY
+    global ballSpeedX, ballSpeedY, playerScore, opponentScore
     ball.x += ballSpeedX
     ball.y += ballSpeedY
 
     if ball.top <= 0 or ball.bottom >= screenHeight:
         ballSpeedY *= -1
-    if ball.left <= 0 or ball.right >= screenWidth:
+    if ball.left <= 0:
         ballRestart()
+        playerScore += 1
+    if ball.right >= screenWidth:
+        ballRestart()
+        opponentScore += 1
 
     if ball.colliderect(player) or ball.colliderect(opponent):
         ballSpeedX *= -1
+        
 def playerAnimation():
     player.y += playerVel
     if player.top <= 0:
@@ -69,7 +75,9 @@ player = pygame.Rect(screenWidth - 20, screenHeight / 2 - 35, 10, 70)
 opponent = pygame.Rect(10, screenHeight / 2 - 35, 10, 70)
     
 # Main Loop
-
+mainFont = pygame.font.SysFont('Arial', 40)
+playerScore = 0
+opponentScore = 0
 secondPlayer = False
 run = True
 while run:
@@ -89,6 +97,10 @@ while run:
                 playerTwoVel -= 3.5
             if event.key == pygame.K_TAB:
                 secondPlayer = True
+            if event.key == pygame.K_r:
+                playerScore = 0
+                oppponentScore = 0
+                ballRestart()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
                 playerVel -= 3.5
@@ -110,9 +122,15 @@ while run:
     
     # Visuals
     screen.fill((0, 0, 0))
+
+    playerScoreLabel = mainFont.render(f"{playerScore}", 1, (255,255,255))
+    opponentScoreLabel = mainFont.render(f"{opponentScore}", 1, (255,255,255))
+    
     pygame.draw.rect(screen, white, player)
     pygame.draw.rect(screen, white, opponent)
     pygame.draw.rect(screen, white, ball)
+    screen.blit(playerScoreLabel, (480, 20))
+    screen.blit(opponentScoreLabel, (160, 20))
     
     # Display Handling
     pygame.display.update()
