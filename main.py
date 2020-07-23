@@ -37,7 +37,7 @@ def secondPlayerAnimation():
     if opponent.top <= 0:
         opponent.top = 0
     if opponent.bottom >= screenHeight:
-        oppoonent.bottom = screenHeight
+        opponent.bottom = screenHeight
 
 def opponentAnimation():
     if opponent.top < ball.y:
