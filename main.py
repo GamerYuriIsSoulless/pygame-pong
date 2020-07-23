@@ -9,6 +9,7 @@ white = (255, 255, 255)
 ballSpeedX = 3.5 * random.choice((1, -1))
 ballSpeedY = 3.5 * random.choice((1, -1))
 playerVel = 0
+playerTwoVel = 0
 opponentVel = 3.5
 
 # Functions
@@ -30,6 +31,13 @@ def playerAnimation():
         player.top = 0
     if player.bottom >= screenHeight:
         player.bottom = screenHeight
+
+def secondPlayerAnimation():
+    opponent.y += playerTwoVel
+    if opponent.top <= 0:
+        opponent.top = 0
+    if opponent.bottom >= screenHeight:
+        oppoonent.bottom = screenHeight
 
 def opponentAnimation():
     if opponent.top < ball.y:
@@ -62,6 +70,7 @@ opponent = pygame.Rect(10, screenHeight / 2 - 35, 10, 70)
     
 # Main Loop
 
+secondPlayer = False
 run = True
 while run:
     
@@ -74,15 +83,30 @@ while run:
                 playerVel += 3.5
             if event.key == pygame.K_UP:
                 playerVel -= 3.5
+            if event.key == pygame.K_s:
+                playerTwoVel += 3.5
+            if event.key == pygame.K_w:
+                playerTwoVel -= 3.5
+            if event.key == pygame.K_TAB:
+                secondPlayer = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
                 playerVel -= 3.5
             if event.key == pygame.K_UP:
                 playerVel += 3.5
+            if event.key == pygame.K_s:
+                playerTwoVel -= 3.5
+            if event.key == pygame.K_w:
+                playerTwoVel += 3.5
 
     ballAnimation()
     playerAnimation()
-    opponentAnimation()
+
+    if secondPlayer == False:
+        opponentAnimation()
+
+    if secondPlayer == True:
+        secondPlayerAnimation()
     
     # Visuals
     screen.fill((0, 0, 0))
